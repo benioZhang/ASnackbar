@@ -23,7 +23,7 @@ import android.widget.FrameLayout;
 import static android.support.design.widget.AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR;
 
 /**
- * Created by zhangzhibin on 2018/7/12.
+ * Created by benio on 2018/7/12.
  */
 public class AnimatedTransientBar<B extends BaseTransientBottomBar<B>> extends HackyBaseTransientBottomBar<B> {
     private int mGravity = Gravity.BOTTOM;

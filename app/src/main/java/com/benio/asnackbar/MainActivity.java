@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +32,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_anim_fade).setOnClickListener(this);
         findViewById(R.id.btn_anim_no).setOnClickListener(this);
         findViewById(R.id.btn_margin).setOnClickListener(this);
-        findViewById(R.id.btn_drawable_horizontal).setOnClickListener(this);
-        findViewById(R.id.btn_drawable_vertical).setOnClickListener(this);
+        findViewById(R.id.btn_drawable).setOnClickListener(this);
         findViewById(R.id.btn_drawable_padding).setOnClickListener(this);
+        findViewById(R.id.btn_text_gravity_left).setOnClickListener(this);
+        findViewById(R.id.btn_text_gravity_center).setOnClickListener(this);
+        findViewById(R.id.btn_text_gravity_right).setOnClickListener(this);
     }
 
     @Override
@@ -97,20 +99,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         getResources().getDisplayMetrics());
                 aSnackbar.setMargins(margin, margin, margin, margin);
                 break;
-            case R.id.btn_drawable_horizontal:
-                aSnackbar.setDrawablesWithIntrinsicBounds(android.R.drawable.ic_dialog_map, 0,
-                        android.R.drawable.ic_dialog_map, 0);
-                break;
-            case R.id.btn_drawable_vertical:
-                aSnackbar.setDrawablesWithIntrinsicBounds(0, android.R.drawable.ic_dialog_map,
-                        0, android.R.drawable.ic_dialog_map);
+            case R.id.btn_drawable:
+                aSnackbar.setDrawableWithIntrinsicBound(android.R.drawable.ic_dialog_map)
+                        .setTextGravity(Gravity.CENTER_VERTICAL);
                 break;
             case R.id.btn_drawable_padding:
                 int pad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8,
                         getResources().getDisplayMetrics());
-                aSnackbar.setDrawablesWithIntrinsicBounds(android.R.drawable.ic_dialog_map, 0,
-                        0, 0)
-                        .setDrawablePadding(pad);
+                aSnackbar.setDrawableWithIntrinsicBound(android.R.drawable.ic_dialog_map)
+                        .setDrawablePadding(pad)
+                        .setTextGravity(Gravity.CENTER_VERTICAL);
+                break;
+            case R.id.btn_text_gravity_left:
+                aSnackbar.setTextGravity(Gravity.START);
+                break;
+            case R.id.btn_text_gravity_center:
+                aSnackbar.setTextGravity(Gravity.CENTER);
+                break;
+            case R.id.btn_text_gravity_right:
+                aSnackbar.setTextGravity(Gravity.END);
                 break;
         }
         aSnackbar.show();
