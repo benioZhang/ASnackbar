@@ -314,11 +314,13 @@ public class AnimatedTransientBar<B extends BaseTransientBottomBar<B>> extends H
     public B setGravity(int gravity) {
         final View view = mView;
         final ViewGroup.LayoutParams p = view.getLayoutParams();
-        if (p instanceof FrameLayout.LayoutParams) {
+        if (p instanceof FrameLayout.LayoutParams
+                && ((FrameLayout.LayoutParams) p).gravity != gravity) {
             ((FrameLayout.LayoutParams) p).gravity = gravity;
             view.setLayoutParams(p);
             mGravity = gravity;
-        } else if (p instanceof CoordinatorLayout.LayoutParams) {
+        } else if (p instanceof CoordinatorLayout.LayoutParams
+                && ((CoordinatorLayout.LayoutParams) p).gravity != gravity) {
             ((CoordinatorLayout.LayoutParams) p).gravity = gravity;
             view.setLayoutParams(p);
             mGravity = gravity;
@@ -336,8 +338,12 @@ public class AnimatedTransientBar<B extends BaseTransientBottomBar<B>> extends H
         final View view = mView;
         final ViewGroup.LayoutParams p = view.getLayoutParams();
         if (p instanceof ViewGroup.MarginLayoutParams) {
-            ((ViewGroup.MarginLayoutParams) p).setMargins(left, top, right, bottom);
-            view.setLayoutParams(p);
+            ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) p;
+            if (mlp.leftMargin != left || mlp.topMargin != top
+                    || mlp.rightMargin != right || mlp.bottomMargin != bottom) {
+                mlp.setMargins(left, top, right, bottom);
+                view.setLayoutParams(mlp);
+            }
         }
         return (B) this;
     }

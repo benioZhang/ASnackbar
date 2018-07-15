@@ -51,6 +51,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_text_gravity_left).setOnClickListener(this);
         findViewById(R.id.btn_text_gravity_center).setOnClickListener(this);
         findViewById(R.id.btn_text_gravity_right).setOnClickListener(this);
+        findViewById(R.id.btn_toast).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FakeToast.make(v, "FakeToast", FakeToast.LENGTH_SHORT)
+                        .show();
+            }
+        });
     }
 
     @Override
