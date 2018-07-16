@@ -1,11 +1,13 @@
 package com.benio.asnackbar;
 
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
-import android.graphics.Color;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AnimatedTransientBar;
 import android.support.design.widget.BaseTransientBottomBar;
+import android.support.v4.view.ViewCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,11 +88,9 @@ public class FakeToast extends AnimatedTransientBar<FakeToast> {
     private FakeToast(@NonNull ViewGroup parent, @NonNull View content,
                       @NonNull ContentViewCallback contentViewCallback) {
         super(parent, content, contentViewCallback);
+        setAnimation(android.R.anim.fade_in, android.R.anim.fade_out);
 
         final View view = getView();
-        view.setBackgroundColor(Color.TRANSPARENT);
-        setAnimationEnabled(false);
-
         final ViewGroup.LayoutParams lp = view.getLayoutParams();
         lp.width = ViewGroup.LayoutParams.WRAP_CONTENT;
         lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -99,9 +99,8 @@ public class FakeToast extends AnimatedTransientBar<FakeToast> {
         }
         if (lp instanceof ViewGroup.MarginLayoutParams) {
             final Resources resources = view.getResources();
-            final int yOffsetDimenId = resources.getIdentifier("toast_y_offset",
-                    "dimen", "android");
-            final int yOffset = resources.getDimensionPixelSize(yOffsetDimenId);
+            final int yOffset = resources.getDimensionPixelSize(resources.
+                    getIdentifier("toast_y_offset", "dimen", "android"));
             ((ViewGroup.MarginLayoutParams) lp).bottomMargin = yOffset;
         }
         view.setLayoutParams(lp);
@@ -115,10 +114,11 @@ public class FakeToast extends AnimatedTransientBar<FakeToast> {
                     + "Please provide a valid view.");
         }
 
+        // Inflate the android toast layout
         final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        final int toastLayout = parent.getResources().getIdentifier("transient_notification",
+        final int toastLayoutRes = parent.getResources().getIdentifier("transient_notification",
                 "layout", "android");
-        final View content = inflater.inflate(toastLayout, parent, false);
+        final View content = inflater.inflate(toastLayoutRes, parent, false);
         final ContentViewCallback callback = new ContentViewCallback() {
             @Override
             public void animateContentIn(int delay, int duration) {
@@ -130,8 +130,17 @@ public class FakeToast extends AnimatedTransientBar<FakeToast> {
         };
         final FakeToast toast = new FakeToast(parent, content, callback);
         toast.mMessageView = (TextView) content.findViewById(android.R.id.message);
-        toast.setText(text);
+        toast.mMessageView.setText(text);
         toast.setDuration(duration);
+
+        // 1.Get toast content view background and set it into SnackbarLayout
+        // 2.Remove toast content view background
+        // 3.Remove SnackbarLayout padding and elevation
+        final View containerView = toast.getView();
+        ViewCompat.setBackground(containerView, content.getBackground());
+        ViewCompat.setBackground(content, null);
+        containerView.setPadding(0, 0, 0, 0);
+        ViewCompat.setElevation(containerView, 0);
         return toast;
     }
 
@@ -143,7 +152,7 @@ public class FakeToast extends AnimatedTransientBar<FakeToast> {
     private static ViewGroup findSuitableParent(View view) {
         ViewGroup fallback = null;
         do {
-            // TODO we are a toast, so we should disable features in CoordinatorLayout
+            //It's a toast, so we should disable features in CoordinatorLayout
             /*if (view instanceof CoordinatorLayout) {
                 // We've found a CoordinatorLayout, use it
                 return (ViewGroup) view;
@@ -190,5 +199,27 @@ public class FakeToast extends AnimatedTransientBar<FakeToast> {
     @NonNull
     public FakeToast setText(@StringRes int resId) {
         return setText(getContext().getText(resId));
+    }
+
+    @NonNull
+    public FakeToast setTextColor(@ColorInt int color) {
+        final TextView tv = mMessageView;
+        tv.setTextColor(color);
+        return this;
+    }
+
+    @NonNull
+    public FakeToast setTextColor(ColorStateList colors) {
+        final TextView tv = mMessageView;
+        tv.setTextColor(colors);
+        return this;
+    }
+
+    @NonNull
+    @Override
+    public FakeToast setGravity(int gravity) {
+        // Reset margins, because we change bottomMargin in constructor.
+        setMargins(0);
+        return super.setGravity(gravity);
     }
 }

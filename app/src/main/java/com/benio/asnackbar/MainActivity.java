@@ -1,5 +1,6 @@
 package com.benio.asnackbar;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.ASnackbar;
@@ -54,8 +55,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_toast).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FakeToast.make(v, "FakeToast", FakeToast.LENGTH_SHORT)
-                        .show();
+                Intent intent = new Intent(MainActivity.this, ToastActivity.class);
+                startActivity(intent);
             }
         });
     }
