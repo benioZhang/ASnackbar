@@ -29,6 +29,7 @@ public class ToastActivity extends AppCompatActivity implements View.OnClickList
         findViewById(R.id.btn_anim_no).setOnClickListener(this);
         findViewById(R.id.btn_margin).setOnClickListener(this);
         findViewById(R.id.btn_text_color).setOnClickListener(this);
+        findViewById(R.id.btn_padding).setOnClickListener(this);
     }
 
     @Override
@@ -82,6 +83,11 @@ public class ToastActivity extends AppCompatActivity implements View.OnClickList
                 // 先设置gravity再设置margin，因为setGravity方法会将margin清零
                 toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL)
                         .setMargins(margin, margin, margin, margin);
+                break;
+            case R.id.btn_padding:
+                int pad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16,
+                        getResources().getDisplayMetrics());
+                toast.setPadding(pad, pad, pad, pad);
                 break;
         }
         toast.show();

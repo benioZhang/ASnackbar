@@ -18,7 +18,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ToastActivity">
+        <activity
+            android:name=".ToastActivity"
+            android:label="@string/title_toast">
         </activity>
     </application>
 

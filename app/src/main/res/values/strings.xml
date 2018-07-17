@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ASnackbar</string>
+    <string name="title_toast">FakeToast</string>
 </resources>

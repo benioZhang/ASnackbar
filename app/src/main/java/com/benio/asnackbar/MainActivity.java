@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -56,13 +58,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_text_gravity_left).setOnClickListener(this);
         findViewById(R.id.btn_text_gravity_center).setOnClickListener(this);
         findViewById(R.id.btn_text_gravity_right).setOnClickListener(this);
-        findViewById(R.id.btn_toast).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ToastActivity.class);
-                startActivity(intent);
-            }
-        });
+        findViewById(R.id.btn_padding).setOnClickListener(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(Menu.NONE, Menu.FIRST, Menu.NONE, "FakeToast")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == Menu.FIRST) {
+            Intent intent = new Intent(MainActivity.this, ToastActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -146,6 +159,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_text_gravity_right:
                 aSnackbar.setTextGravity(Gravity.END);
+                break;
+            case R.id.btn_padding:
+                aSnackbar.setPadding((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                        8, getResources().getDisplayMetrics()));
                 break;
         }
         aSnackbar.show();

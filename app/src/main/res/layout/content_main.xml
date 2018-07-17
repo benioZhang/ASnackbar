@@ -256,10 +256,10 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_snackbar_other"/>
 
         <Button
-            android:id="@+id/btn_toast"
+            android:id="@+id/btn_padding"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Toast"
+            android:text="内边距"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_margin"/>

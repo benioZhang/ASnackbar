@@ -174,5 +174,14 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_text_color"/>
+
+        <Button
+            android:id="@+id/btn_padding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="内边距"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_margin"/>
     </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>
