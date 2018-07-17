@@ -349,6 +349,17 @@ public class AnimatedTransientBar<B extends BaseTransientBottomBar<B>> extends H
     }
 
     @NonNull
+    public B setPadding(int pad) {
+        return setPadding(pad, pad, pad, pad);
+    }
+
+    @NonNull
+    public B setPadding(int left, int top, int right, int bottom) {
+        mView.setPadding(left, top, right, bottom);
+        return (B) this;
+    }
+
+    @NonNull
     public B setBackgroundColor(@ColorInt int color) {
         mView.setBackgroundColor(color);
         return (B) this;

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.ASnackbar;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +12,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -92,9 +96,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_gravity_top:
                 aSnackbar.setGravity(Gravity.TOP);
+                removeInsetEdge(v, aSnackbar);
                 break;
             case R.id.btn_gravity_center:
                 aSnackbar.setGravity(Gravity.CENTER);
+                removeInsetEdge(v, aSnackbar);
                 break;
             case R.id.btn_gravity_bottom:
                 aSnackbar.setGravity(Gravity.BOTTOM);
@@ -143,5 +149,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
         aSnackbar.show();
+    }
+
+    private static void removeInsetEdge(View v, final ASnackbar snackbar) {
+        ViewGroup viewGroup = findSuitableParent(v);
+        if (viewGroup instanceof CoordinatorLayout) {
+            viewGroup.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
+                @Override
+                public void onChildViewAdded(View parent, View child) {
+                    if (child == snackbar.getView()) {
+                        CoordinatorLayout.LayoutParams clp =
+                                (CoordinatorLayout.LayoutParams) child.getLayoutParams();
+                        clp.insetEdge = Gravity.NO_GRAVITY;
+                    }
+                }
+
+                @Override
+                public void onChildViewRemoved(View parent, View child) {
+                }
+            });
+        }
+    }
+
+    private static ViewGroup findSuitableParent(View view) {
+        ViewGroup fallback = null;
+        do {
+            if (view instanceof CoordinatorLayout) {
+                // We've found a CoordinatorLayout, use it
+                return (ViewGroup) view;
+            } else if (view instanceof FrameLayout) {
+                if (view.getId() == android.R.id.content) {
+                    // If we've hit the decor content view, then we didn't find a CoL in the
+                    // hierarchy, so use it.
+                    return (ViewGroup) view;
+                } else {
+                    // It's not the content view but we'll use it as our fallback
+                    fallback = (ViewGroup) view;
+                }
+            }
+
+            if (view != null) {
+                // Else, we will loop and crawl up the view hierarchy and try to find a parent
+                final ViewParent parent = view.getParent();
+                view = parent instanceof View ? (View) parent : null;
+            }
+        } while (view != null);
+
+        // If we reach here then we didn't find a CoL or a suitable content view so we'll fallback
+        return fallback;
     }
 }
