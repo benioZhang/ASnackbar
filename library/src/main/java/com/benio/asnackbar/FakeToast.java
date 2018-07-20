@@ -84,6 +84,7 @@ public class FakeToast extends AnimatedTransientBar<FakeToast> {
     }
 
     private TextView mMessageView;
+    private int mGravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
 
     private FakeToast(@NonNull ViewGroup parent, @NonNull View content,
                       @NonNull ContentViewCallback contentViewCallback) {
@@ -95,13 +96,11 @@ public class FakeToast extends AnimatedTransientBar<FakeToast> {
         lp.width = ViewGroup.LayoutParams.WRAP_CONTENT;
         lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         if (lp instanceof FrameLayout.LayoutParams) {
-            ((FrameLayout.LayoutParams) lp).gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
-        }
-        if (lp instanceof ViewGroup.MarginLayoutParams) {
+            ((FrameLayout.LayoutParams) lp).gravity = mGravity;
             final Resources resources = view.getResources();
             final int yOffset = resources.getDimensionPixelSize(resources.
                     getIdentifier("toast_y_offset", "dimen", "android"));
-            ((ViewGroup.MarginLayoutParams) lp).bottomMargin = yOffset;
+            ((ViewGroup.MarginLayoutParams) lp).bottomMargin += yOffset;
         }
         view.setLayoutParams(lp);
     }
@@ -179,6 +178,31 @@ public class FakeToast extends AnimatedTransientBar<FakeToast> {
         return fallback;
     }
 
+    @Override
+    protected int animateFrom() {
+        return mGravity;
+    }
+
+    public int getGravity() {
+        return mGravity;
+    }
+
+    @NonNull
+    public FakeToast setGravity(int gravity) {
+        final View view = getView();
+        final ViewGroup.LayoutParams p = view.getLayoutParams();
+        if (p instanceof FrameLayout.LayoutParams
+                && ((FrameLayout.LayoutParams) p).gravity != gravity) {
+            ((FrameLayout.LayoutParams) p).gravity = gravity;
+            // If we change gravity, reset bottomMargin.
+            // Because we change bottomMargin in constructor.
+            ((FrameLayout.LayoutParams) p).bottomMargin = 0;
+            view.setLayoutParams(p);
+            mGravity = gravity;
+        }
+        return this;
+    }
+
     /**
      * Update the text in this {@link FakeToast}.
      *
@@ -213,13 +237,5 @@ public class FakeToast extends AnimatedTransientBar<FakeToast> {
         final TextView tv = mMessageView;
         tv.setTextColor(colors);
         return this;
-    }
-
-    @NonNull
-    @Override
-    public FakeToast setGravity(int gravity) {
-        // Reset margins, because we change bottomMargin in constructor.
-        setMargins(0);
-        return super.setGravity(gravity);
     }
 }

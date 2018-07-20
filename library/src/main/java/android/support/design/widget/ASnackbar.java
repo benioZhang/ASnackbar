@@ -11,6 +11,7 @@ import android.support.design.R;
 import android.support.design.internal.SnackbarContentLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,6 +86,8 @@ public final class ASnackbar extends AnimatedTransientBar<ASnackbar> {
             // Stub implementation to make API check happy.
         }
     }
+
+    private int mGravity = Gravity.BOTTOM;
 
     private ASnackbar(@NonNull ViewGroup parent, @NonNull View content,
                       @NonNull ContentViewCallback contentViewCallback) {
@@ -175,6 +178,33 @@ public final class ASnackbar extends AnimatedTransientBar<ASnackbar> {
 
         // If we reach here then we didn't find a CoL or a suitable content view so we'll fallback
         return fallback;
+    }
+
+    @Override
+    protected int animateFrom() {
+        return mGravity;
+    }
+
+    public int getGravity() {
+        return mGravity;
+    }
+
+    @NonNull
+    public ASnackbar setGravity(int gravity) {
+        final View view = mView;
+        final ViewGroup.LayoutParams p = view.getLayoutParams();
+        if (p instanceof FrameLayout.LayoutParams
+                && ((FrameLayout.LayoutParams) p).gravity != gravity) {
+            ((FrameLayout.LayoutParams) p).gravity = gravity;
+            view.setLayoutParams(p);
+            mGravity = gravity;
+        } else if (p instanceof CoordinatorLayout.LayoutParams
+                && ((CoordinatorLayout.LayoutParams) p).gravity != gravity) {
+            ((CoordinatorLayout.LayoutParams) p).gravity = gravity;
+            view.setLayoutParams(p);
+            mGravity = gravity;
+        }
+        return this;
     }
 
     /**

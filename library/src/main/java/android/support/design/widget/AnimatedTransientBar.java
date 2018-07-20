@@ -18,15 +18,13 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.SimpleAnimationListener;
 import android.view.animation.TranslateAnimation;
-import android.widget.FrameLayout;
 
 import static android.support.design.widget.AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR;
 
 /**
  * Created by benio on 2018/7/12.
  */
-public class AnimatedTransientBar<B extends BaseTransientBottomBar<B>> extends HackyBaseTransientBottomBar<B> {
-    private int mGravity = Gravity.BOTTOM;
+public abstract class AnimatedTransientBar<B extends BaseTransientBottomBar<B>> extends HackyBaseTransientBottomBar<B> {
     private Animation mInAnimation;
     private Animation mOutAnimation;
     private boolean mAnimationEnabled = true;
@@ -35,6 +33,8 @@ public class AnimatedTransientBar<B extends BaseTransientBottomBar<B>> extends H
                                    @NonNull ContentViewCallback contentViewCallback) {
         super(parent, content, contentViewCallback);
     }
+
+    protected abstract int animateFrom();
 
     @Override
     void animateViewIn() {
@@ -50,7 +50,8 @@ public class AnimatedTransientBar<B extends BaseTransientBottomBar<B>> extends H
             return;
         }
 
-        switch (mGravity & Gravity.VERTICAL_GRAVITY_MASK) {
+        final int from = animateFrom();
+        switch (from & Gravity.VERTICAL_GRAVITY_MASK) {
             case Gravity.TOP:
                 animateViewInFromTop();
                 break;
@@ -178,7 +179,8 @@ public class AnimatedTransientBar<B extends BaseTransientBottomBar<B>> extends H
             return;
         }
 
-        switch (mGravity & Gravity.VERTICAL_GRAVITY_MASK) {
+        final int from = animateFrom();
+        switch (from & Gravity.VERTICAL_GRAVITY_MASK) {
             case Gravity.TOP:
                 animateViewOutFromTop(event);
                 break;
@@ -293,6 +295,10 @@ public class AnimatedTransientBar<B extends BaseTransientBottomBar<B>> extends H
         return (B) this;
     }
 
+    public boolean isAnimationEnabled() {
+        return mAnimationEnabled;
+    }
+
     @NonNull
     public B setAnimation(@AnimRes int in, @AnimRes int out) {
         final Context context = getContext();
@@ -307,24 +313,6 @@ public class AnimatedTransientBar<B extends BaseTransientBottomBar<B>> extends H
         mAnimationEnabled = true;
         mInAnimation = in;
         mOutAnimation = out;
-        return (B) this;
-    }
-
-    @NonNull
-    public B setGravity(int gravity) {
-        final View view = mView;
-        final ViewGroup.LayoutParams p = view.getLayoutParams();
-        if (p instanceof FrameLayout.LayoutParams
-                && ((FrameLayout.LayoutParams) p).gravity != gravity) {
-            ((FrameLayout.LayoutParams) p).gravity = gravity;
-            view.setLayoutParams(p);
-            mGravity = gravity;
-        } else if (p instanceof CoordinatorLayout.LayoutParams
-                && ((CoordinatorLayout.LayoutParams) p).gravity != gravity) {
-            ((CoordinatorLayout.LayoutParams) p).gravity = gravity;
-            view.setLayoutParams(p);
-            mGravity = gravity;
-        }
         return (B) this;
     }
 
