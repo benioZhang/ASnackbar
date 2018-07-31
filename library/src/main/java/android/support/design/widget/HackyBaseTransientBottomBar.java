@@ -37,10 +37,14 @@ public class HackyBaseTransientBottomBar<B extends BaseTransientBottomBar<B>> ex
             public boolean handleMessage(Message message) {
                 switch (message.what) {
                     case MSG_SHOW:
-                        ((HackyBaseTransientBottomBar) message.obj).showView();
+                        ((BaseTransientBottomBar) message.obj).showView();
                         return true;
                     case MSG_DISMISS:
-                        ((HackyBaseTransientBottomBar) message.obj).hackyHideView(message.arg1);
+                        if (message.obj instanceof HackyBaseTransientBottomBar) {
+                            ((HackyBaseTransientBottomBar) message.obj).hackyHideView(message.arg1);
+                        } else {
+                            ((BaseTransientBottomBar) message.obj).hideView(message.arg1);
+                        }
                         return true;
                 }
                 return false;
@@ -60,7 +64,8 @@ public class HackyBaseTransientBottomBar<B extends BaseTransientBottomBar<B>> ex
 
     final ContentViewCallback mContentViewCallback;
 
-    protected HackyBaseTransientBottomBar(@NonNull ViewGroup parent, @NonNull View content, @NonNull ContentViewCallback contentViewCallback) {
+    protected HackyBaseTransientBottomBar(@NonNull ViewGroup parent, @NonNull View content,
+                                          @NonNull ContentViewCallback contentViewCallback) {
         super(parent, content, contentViewCallback);
         mContentViewCallback = contentViewCallback;
     }

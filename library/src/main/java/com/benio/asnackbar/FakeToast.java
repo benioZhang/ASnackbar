@@ -179,7 +179,7 @@ public class FakeToast extends AnimatedTransientBar<FakeToast> {
     }
 
     @Override
-    protected int animateFrom() {
+    protected int animateAt() {
         return mGravity;
     }
 

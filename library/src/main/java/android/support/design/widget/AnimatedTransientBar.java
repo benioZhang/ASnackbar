@@ -34,7 +34,7 @@ public abstract class AnimatedTransientBar<B extends BaseTransientBottomBar<B>> 
         super(parent, content, contentViewCallback);
     }
 
-    protected abstract int animateFrom();
+    protected abstract int animateAt();
 
     @Override
     void animateViewIn() {
@@ -50,13 +50,13 @@ public abstract class AnimatedTransientBar<B extends BaseTransientBottomBar<B>> 
             return;
         }
 
-        final int from = animateFrom();
-        switch (from & Gravity.VERTICAL_GRAVITY_MASK) {
+        final int animateAt = animateAt();
+        switch (animateAt & Gravity.VERTICAL_GRAVITY_MASK) {
             case Gravity.TOP:
-                animateViewInFromTop();
+                animateViewInAtTop();
                 break;
             case Gravity.CENTER_VERTICAL:
-                animateViewInFromCenter();
+                animateViewInAtCenter();
                 break;
             case Gravity.BOTTOM:
             default:
@@ -65,7 +65,7 @@ public abstract class AnimatedTransientBar<B extends BaseTransientBottomBar<B>> 
         }
     }
 
-    private void animateViewInFromTop() {
+    private void animateViewInAtTop() {
         if (Build.VERSION.SDK_INT >= 12) {
             final int viewHeight = -mView.getHeight();
             if (USE_OFFSET_API) {
@@ -123,7 +123,7 @@ public abstract class AnimatedTransientBar<B extends BaseTransientBottomBar<B>> 
         }
     }
 
-    private void animateViewInFromCenter() {
+    private void animateViewInAtCenter() {
         if (Build.VERSION.SDK_INT >= 12) {
             mView.setAlpha(1f);
             final ValueAnimator animator = new ValueAnimator();
@@ -179,13 +179,13 @@ public abstract class AnimatedTransientBar<B extends BaseTransientBottomBar<B>> 
             return;
         }
 
-        final int from = animateFrom();
-        switch (from & Gravity.VERTICAL_GRAVITY_MASK) {
+        final int animateAt = animateAt();
+        switch (animateAt & Gravity.VERTICAL_GRAVITY_MASK) {
             case Gravity.TOP:
-                animateViewOutFromTop(event);
+                animateViewOutAtTop(event);
                 break;
             case Gravity.CENTER_VERTICAL:
-                animateViewOutFromCenter(event);
+                animateViewOutAtCenter(event);
                 break;
             case Gravity.BOTTOM:
             default:
@@ -194,7 +194,7 @@ public abstract class AnimatedTransientBar<B extends BaseTransientBottomBar<B>> 
         }
     }
 
-    private void animateViewOutFromTop(final int event) {
+    private void animateViewOutAtTop(final int event) {
         if (Build.VERSION.SDK_INT >= 12) {
             final ValueAnimator animator = new ValueAnimator();
             animator.setIntValues(0, -mView.getHeight());
@@ -244,7 +244,7 @@ public abstract class AnimatedTransientBar<B extends BaseTransientBottomBar<B>> 
         }
     }
 
-    private void animateViewOutFromCenter(final int event) {
+    private void animateViewOutAtCenter(final int event) {
         if (Build.VERSION.SDK_INT >= 12) {
             final ValueAnimator animator = new ValueAnimator();
             animator.setFloatValues(1f, 0f);

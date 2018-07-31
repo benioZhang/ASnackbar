@@ -181,7 +181,7 @@ public final class ASnackbar extends AnimatedTransientBar<ASnackbar> {
     }
 
     @Override
-    protected int animateFrom() {
+    protected int animateAt() {
         return mGravity;
     }
 
