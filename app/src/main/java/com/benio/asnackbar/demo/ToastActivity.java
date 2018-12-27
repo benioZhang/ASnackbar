@@ -1,4 +1,4 @@
-package com.benio.asnackbar;
+package com.benio.asnackbar.demo;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+
+import com.benio.asnackbar.FakeToast;
 
 public class ToastActivity extends AppCompatActivity implements View.OnClickListener {
 

@@ -1,4 +1,4 @@
-package com.benio.asnackbar;
+package com.benio.asnackbar.demo;
 
 import android.content.Intent;
 import android.graphics.Color;
